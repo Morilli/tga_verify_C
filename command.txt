@@ -1,0 +1,2 @@
+Debug compilation: gcc -Wall -std=c18 -g ./tga_verify.c -o tga_verify
+Release compilation: gcc -Wall -std=c18 -Os -s ./tga_verify.c -o tga_verify
