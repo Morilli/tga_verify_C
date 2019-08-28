@@ -80,7 +80,7 @@ int main(int argc, char** argv)
             fseek(tga_file, 1 + current_dimensions[0] * current_dimensions[1] * current_dimensions[2]/8, SEEK_CUR);
             uint8_t truevision[26];
             if (fread(truevision, 1, 26, tga_file) != 26) {
-                fprintf(stderr, "Error: The file \"%s\" is not long enough.\n", filename);
+                fprintf(stderr, "Error: The file \"%s\" is not long enough. The \"TRUEVISION\" footer may be missing.\n", filename);
                 goto continue_point;
             }
             if (memcmp(truevision, "\x00\x00\x00\x00\x00\x00\x00\x00TRUEVISION-XFILE.", 26) != 0) {
