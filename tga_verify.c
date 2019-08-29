@@ -40,7 +40,7 @@ int main(int argc, char** argv)
         strcpy(&filename[foldername_length], tgas[i]);
         FILE* tga_file = fixup ? fopen(filename, "rb+") : fopen(filename, "rb");
         if (!tga_file) {
-            fprintf(stderr, "Error: file \"%s\" can't be accessed. Make sure it exists and is accessable.\n", filename);
+            fprintf(stderr, "Error: The file \"%s\" can't be accessed. Make sure it exists and is accessable.\n", filename);
             continue;
         }
 
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
             bool dimensions_mismatch = false;
             for (int j = 0; j < 3; j++) {
                 if (current_dimensions[j] != dimensions[i][j]) {
-                    fprintf(stderr, "Error: \"%s\" has a %s of %d; expected %d.\n", filename, dimension_name[j], current_dimensions[j], dimensions[i][j]);
+                    fprintf(stderr, "Error: The file \"%s\" has a %s of %d; expected %d.\n", filename, dimension_name[j], current_dimensions[j], dimensions[i][j]);
                     dimensions_mismatch = true;
                 }
             }
