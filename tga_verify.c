@@ -49,8 +49,11 @@ int main(int argc, char** argv)
             fwrite(dimensions[i], 2, 1, tga_file);
             fwrite(&dimensions[i][1], 2, 1, tga_file);
             fwrite(&dimensions[i][2], 1, 1, tga_file);
-            fseek(tga_file, 1 + dimensions[i][0] * dimensions[i][1] * dimensions[i][2]/8, SEEK_CUR);
-            fwrite("\x00\x00\x00\x00\x00\x00\x00\x00TRUEVISION-XFILE.", 1, 26, tga_file);
+            fseek(tga_file, 0, SEEK_END); // check whether the file is long enough for the wiiu to accept it
+            if (ftell(tga_file) < 18 + dimensions[i][0] * dimensions[i][1] * dimensions[i][2]/8 + 26) {
+                fseek(tga_file, 18 + dimensions[i][0] * dimensions[i][1] * dimensions[i][2]/8, SEEK_SET);
+                fwrite("\x00\x00\x00\x00\x00\x00\x00\x00TRUEVISION-XFILE.", 1, 26, tga_file);
+            }
         } else {
             uint8_t current_header[12];
             if (fread(current_header, 1, 12, tga_file) != 12) {
@@ -77,14 +80,9 @@ int main(int argc, char** argv)
             if (dimensions_mismatch)
                 goto continue_point;
 
-            fseek(tga_file, 1 + current_dimensions[0] * current_dimensions[1] * current_dimensions[2]/8, SEEK_CUR);
-            uint8_t truevision[26];
-            if (fread(truevision, 1, 26, tga_file) != 26) {
+            fseek(tga_file, 0, SEEK_END); // check whether the file is long enough for the wiiu to accept it
+            if (ftell(tga_file) < 18 + dimensions[i][0] * dimensions[i][1] * dimensions[i][2]/8 + 26) {
                 fprintf(stderr, "Error: The file \"%s\" is not long enough. The \"TRUEVISION\" footer may be missing.\n", filename);
-                goto continue_point;
-            }
-            if (memcmp(truevision, "\x00\x00\x00\x00\x00\x00\x00\x00TRUEVISION-XFILE.", 26) != 0) {
-                fprintf(stderr, "Error: Truevision footer incorrect for file \"%s\".\n", filename);
                 goto continue_point;
             }
         }
